@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>دفتر المفردات التركية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F2E7; --ink:#22261F; --muted:#7A7264; --card:#FFFDF8; --border:#DFD5BC;
+    box-sizing:border-box;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#181A16; --ink:#EAE4D4; --muted:#9B9384; --card:#20231D; --border:#3A3A30;
+    }
+  }
+  :root[data-theme="dark"]{ --bg:#181A16; --ink:#EAE4D4; --muted:#9B9384; --card:#20231D; --border:#3A3A30; }
+  *{box-sizing:inherit}
+  html{scroll-padding-top:env(safe-area-inset-top,0px)}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); font-family:'Tajawal',sans-serif;
+    padding:calc(24px + env(safe-area-inset-top,0px)) 18px calc(40px + env(safe-area-inset-bottom,0px));
+  }
+  .wrap{max-width:720px;margin:0 auto}
+  header{margin-bottom:18px}
+  h1{font-family:'Amiri',serif;font-size:2rem;margin:0 0 4px;font-weight:700}
+  .sub{color:var(--muted);font-size:.95rem;margin:0}
+  .stats{margin-top:10px;color:var(--muted);font-size:.85rem}
+
+  .excel-bar{display:flex;gap:10px;margin-bottom:14px}
+  .excel-bar button{
+    flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--card);
+    color:var(--ink);font-family:'Tajawal',sans-serif;font-weight:500;font-size:.88rem;cursor:pointer;
+  }
+
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:18px}
+  .toggle-btn{
+    width:100%;text-align:center;background:var(--ink);color:var(--bg);border:none;border-radius:10px;
+    padding:13px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;margin-bottom:10px;
+  }
+  .toggle-btn.secondary{background:transparent;color:var(--ink);border:1px solid var(--border)}
+  .toggle-btn:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{outline:2px solid #3B6EA5;outline-offset:2px}
+
+  label{display:block;font-size:.85rem;color:var(--muted);margin:12px 0 5px}
+  label:first-child{margin-top:0}
+  input[type=text], textarea, select{
+    width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:7px;background:var(--bg);
+    color:var(--ink);font-family:'Tajawal',sans-serif;font-size:.95rem;
+  }
+  input[dir=ltr], textarea[dir=ltr]{text-align:left}
+  textarea{resize:vertical;min-height:52px}
+  .row-actions{display:flex;gap:10px;margin-top:14px}
+  .row-actions button{flex:1;padding:11px;border-radius:8px;border:none;font-weight:700;cursor:pointer;font-family:'Tajawal',sans-serif}
+  .save-btn{background:#1E7F79;color:#fff}
+  .cancel-btn{background:transparent;color:var(--muted);border:1px solid var(--border) !important}
+
+  .cat-manage-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
+  .cat-manage-row:last-child{border-bottom:none}
+  .cat-manage-row .del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.8rem;text-decoration:underline;font-family:'Tajawal',sans-serif}
+  .add-cat-row{display:flex;gap:8px;margin-top:12px}
+  .add-cat-row input{flex:1}
+  .add-cat-row button{padding:0 16px;border-radius:7px;border:none;background:#1E7F79;color:#fff;font-weight:700;cursor:pointer;font-family:'Tajawal',sans-serif}
+
+  .toolbar{display:flex;gap:8px;margin-bottom:12px}
+  .toolbar input{flex:1}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;align-items:center}
+  .chip{
+    border:1px solid var(--border);background:var(--card);color:var(--ink);border-radius:999px;
+    padding:6px 13px;font-size:.82rem;cursor:pointer;font-family:'Tajawal',sans-serif;
+  }
+  .chip.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .chip.manage{background:none;border:1px dashed var(--border);color:var(--muted)}
+
+  .entry{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+  .entry-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .tag{font-size:.78rem;padding:3px 10px;border-radius:999px;color:#fff}
+  .date{font-size:.75rem;color:var(--muted)}
+  .word{font-weight:700;font-size:1.15rem;margin-bottom:4px}
+  .sentence{color:var(--muted);font-style:italic;margin-bottom:6px;line-height:1.5}
+  .meaning, .notes{font-size:.9rem;margin-bottom:3px}
+  .meaning b, .notes b{color:var(--muted);font-weight:500}
+  .entry-actions{display:flex;gap:14px;margin-top:10px}
+  .entry-actions button{background:none;border:none;color:var(--muted);font-size:.82rem;cursor:pointer;font-family:'Tajawal',sans-serif;padding:0;text-decoration:underline}
+  .entry-actions button:hover{color:#A8542E}
+
+  .empty{text-align:center;color:var(--muted);padding:40px 10px;font-size:.95rem}
+  .hint{font-size:.78rem;color:var(--muted);margin-top:8px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📖 دفتر المفردات التركية</h1>
+    <p class="sub">كل كلمة جديدة، بسياقها الأصلي، في مكان واحد</p>
+    <p class="stats" id="stats"></p>
+    <p class="stats" id="syncStatus"></p>
+  </header>
+
+  <div class="excel-bar">
+    <button id="exportBtn" style="display:none">📤 تصدير إلى Excel</button>
+    <button id="importBtn">📥 استيراد من Excel</button>
+    <input type="file" id="importFile" accept=".xlsx,.xls" style="display:none">
+  </div>
+
+  <button class="toggle-btn" id="toggleFormBtn">+ إضافة كلمة جديدة</button>
+  <button class="toggle-btn secondary" id="toggleCatBtn">⚙️ إدارة التصنيفات</button>
+  <button class="toggle-btn secondary" id="toggleLinkBtn">🔗 ربط بجوجل شيت</button>
+
+  <div class="panel" id="formPanel" style="display:none">
+    <label>الكلمة أو العبارة التركية *</label>
+    <input type="text" id="fWord" dir="ltr" placeholder="örn: gündem">
+    <label>الجملة الأصلية كما وردت *</label>
+    <textarea id="fSentence" dir="ltr" placeholder="الجملة من الخبر أو المنشور"></textarea>
+    <label>المعنى بالعربي (اختياري)</label>
+    <input type="text" id="fMeaning" placeholder="المعنى">
+    <label>ملاحظات نطق / استخدام (اختياري)</label>
+    <textarea id="fNotes" placeholder="مثال: النطق، أين تُستعمل، فرق عن كلمة مشابهة..."></textarea>
+    <label>التصنيف *</label>
+    <select id="fCategory"></select>
+    <div class="row-actions">
+      <button class="save-btn" id="saveBtn">حفظ الكلمة</button>
+      <button class="cancel-btn" id="cancelBtn">إلغاء</button>
+    </div>
+  </div>
+
+  <div class="panel" id="catPanel" style="display:none">
+    <div id="catManageList"></div>
+    <div class="add-cat-row">
+      <input type="text" id="newCatInput" placeholder="اسم تصنيف جديد">
+      <button id="addCatBtn">إضافة</button>
+    </div>
+    <p class="hint">حذف تصنيف ينقل كلماته إلى "غير مصنف". لا يمكن حذف "غير مصنف" نفسه.</p>
+  </div>
+
+  <div class="panel" id="linkPanel" style="display:none">
+    <label>رابط Web App (من Google Apps Script)</label>
+    <input type="text" id="linkUrl" dir="ltr" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+    <label>كلمة السر (اخترتها عند إعداد السكربت)</label>
+    <input type="text" id="linkToken" dir="ltr" placeholder="secret token">
+    <div class="row-actions">
+      <button class="save-btn" id="saveLinkBtn">حفظ الربط والمزامنة</button>
+      <button class="cancel-btn" id="unlinkBtn">إلغاء الربط</button>
+    </div>
+    <p class="hint">بعد الربط، كل إضافة/تعديل/حذف بالتطبيق ينعكس تلقائيًا على الشيت (ويُقرأ منه عند فتح الصفحة). يعمل فقط عندما تفتح الملف خارج معاينة Claude (مثلاً بعد رفعه على GitHub Pages) — معاينة Claude تمنع الاتصال بخوادم خارجية لأسباب أمنية.</p>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="🔍 ابحث عن كلمة...">
+  </div>
+  <div class="chips" id="chips"></div>
+  <div id="list"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const DEFAULT_CATS = [
+  {key:'new', label:'🆕 جديدة كليًا', color:'#1E7F79'},
+  {key:'daily', label:'🔁 للاستخدام اليومي', color:'#3B6EA5'},
+  {key:'retain', label:'💭 نادرة الاستخدام', color:'#8B6F47'},
+  {key:'pron', label:'🗣️ مراجعة نطق', color:'#A8542E'},
+  {key:'work', label:'💼 مصطلحات العمل', color:'#5B5A97'},
+  {key:'proverb', label:'📜 أمثال وأقوال', color:'#78873A'},
+  {key:'other', label:'❓ غير مصنف', color:'#7A7264'},
+];
+const CUSTOM_PALETTE = ['#2E6B4F','#9A4E6B','#4E7A9E','#B08B2E','#6B4E9E','#4E9E8A','#9E6B4E','#5E5E9E'];
+const ENTRIES_KEY='turkish-vocab-entries';
+const CATS_KEY='turkish-vocab-categories';
+const LINK_KEY='turkish-vocab-sheet-link';
+
+let entries = [];
+let categories = [];
+let activeCat = 'all';
+let editingId = null;
+let downloadsCap = null;
+let sheetLink = null;
+
+function loadEntries(){
+  try{ const raw = localStorage.getItem(ENTRIES_KEY); entries = raw ? JSON.parse(raw) : []; }
+  catch(e){ entries = []; }
+}
+function saveEntries(){ try{ localStorage.setItem(ENTRIES_KEY, JSON.stringify(entries)); }catch(e){} }
+
+function loadCategories(){
+  try{ const raw = localStorage.getItem(CATS_KEY); categories = raw ? JSON.parse(raw) : null; }
+  catch(e){ categories = null; }
+  if(!categories || categories.length===0){ categories = DEFAULT_CATS.map(c=>({...c})); saveCategories(); }
+}
+function saveCategories(){ try{ localStorage.setItem(CATS_KEY, JSON.stringify(categories)); }catch(e){} }
+function catByKey(key){ return categories.find(c=>c.key===key) || categories.find(c=>c.key==='other'); }
+function catLabelOf(key){ return catByKey(key).label; }
+function catColorOf(key){ return catByKey(key).color; }
+
+function ensureCategory(labelRaw){
+  const label = (labelRaw||'').trim();
+  if(!label) return 'other';
+  const found = categories.find(c=> c.label.toLowerCase()===label.toLowerCase() || c.label.replace(/^\S+\s/,'').toLowerCase()===label.toLowerCase());
+  if(found) return found.key;
+  const customCount = categories.length - DEFAULT_CATS.length;
+  const color = CUSTOM_PALETTE[Math.max(0,customCount) % CUSTOM_PALETTE.length];
+  const key = 'cat_'+Date.now()+Math.floor(Math.random()*1000);
+  const hasEmoji = /^\p{Emoji}/u.test(label);
+  categories.push({key, label: hasEmoji ? label : ('🏷️ '+label), color});
+  saveCategories();
+  return key;
+}
+
+function addCategory(){
+  const val = document.getElementById('newCatInput').value.trim();
+  if(!val) return;
+  ensureCategory(val);
+  document.getElementById('newCatInput').value='';
+  render();
+}
+
+function deleteCategory(key){
+  if(key==='other') return;
+  const cat = catByKey(key);
+  if(!confirm('حذف تصنيف "'+cat.label+'"؟ الكلمات فيه ستنتقل إلى "غير مصنف".')) return;
+  categories = categories.filter(c=>c.key!==key);
+  entries.forEach(e=>{ if(e.category===key) e.category='other'; });
+  saveCategories(); saveEntries(); render();
+}
+
+function renderCatManage(){
+  document.getElementById('catManageList').innerHTML = categories.map(c=>`
+    <div class="cat-manage-row">
+      <span>${c.label}</span>
+      ${c.key!=='other' ? `<button class="del" onclick="deleteCategory('${c.key}')">حذف</button>` : ''}
+    </div>`).join('');
+}
+
+function renderCategorySelect(){
+  const sel = document.getElementById('fCategory');
+  const current = sel.value;
+  sel.innerHTML = categories.map(c=>`<option value="${c.key}">${c.label}</option>`).join('');
+  if(categories.some(c=>c.key===current)) sel.value = current;
+}
+
+function renderChips(){
+  const chips = document.getElementById('chips');
+  const counts = {all:entries.length};
+  categories.forEach(c=> counts[c.key] = entries.filter(e=>e.category===c.key).length);
+  let html = `<div class="chip ${activeCat==='all'?'active':''}" data-cat="all">الكل (${counts.all})</div>`;
+  categories.forEach(c=>{
+    html += `<div class="chip ${activeCat===c.key?'active':''}" data-cat="${c.key}">${c.label} (${counts[c.key]})</div>`;
+  });
+  chips.innerHTML = html;
+  chips.querySelectorAll('.chip').forEach(c=> c.onclick = ()=>{ activeCat = c.dataset.cat; render(); });
+}
+
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+function renderList(){
+  const list = document.getElementById('list');
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  let filtered = entries.filter(e=>{
+    if(activeCat!=='all' && e.category!==activeCat) return false;
+    if(!q) return true;
+    return (e.word+' '+e.sentence+' '+e.meaning+' '+e.notes).toLowerCase().includes(q);
+  }).sort((a,b)=> b.id - a.id);
+
+  if(filtered.length===0){
+    list.innerHTML = `<div class="empty">${entries.length===0 ? 'لسا ما ضفت أي كلمة. اضغط "إضافة كلمة جديدة" وابدأ دفترك.' : 'ما في كلمات مطابقة.'}</div>`;
+    return;
+  }
+  list.innerHTML = filtered.map(e=>`
+    <div class="entry">
+      <div class="entry-top">
+        <span class="tag" style="background:${catColorOf(e.category)}">${catLabelOf(e.category)}</span>
+        <span class="date">${e.date}</span>
+      </div>
+      <div class="word" dir="ltr">${escapeHtml(e.word)}</div>
+      <div class="sentence" dir="ltr">${escapeHtml(e.sentence)}</div>
+      ${e.meaning ? `<div class="meaning"><b>المعنى:</b> ${escapeHtml(e.meaning)}</div>` : ''}
+      ${e.notes ? `<div class="notes"><b>ملاحظات:</b> ${escapeHtml(e.notes)}</div>` : ''}
+      <div class="entry-actions">
+        <button onclick="editEntry(${e.id})">تعديل</button>
+        <button onclick="deleteEntry(${e.id})">حذف</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderStats(){ document.getElementById('stats').textContent = `إجمالي الكلمات المحفوظة: ${entries.length}`; }
+
+function render(){ renderCategorySelect(); renderCatManage(); renderChips(); renderList(); renderStats(); }
+
+function resetForm(){
+  document.getElementById('fWord').value='';
+  document.getElementById('fSentence').value='';
+  document.getElementById('fMeaning').value='';
+  document.getElementById('fNotes').value='';
+  renderCategorySelect();
+  document.getElementById('fCategory').value = categories[0].key;
+  editingId = null;
+  document.getElementById('saveBtn').textContent='حفظ الكلمة';
+}
+
+function editEntry(id){
+  const e = entries.find(x=>x.id===id);
+  if(!e) return;
+  document.getElementById('fWord').value=e.word;
+  document.getElementById('fSentence').value=e.sentence;
+  document.getElementById('fMeaning').value=e.meaning;
+  document.getElementById('fNotes').value=e.notes;
+  renderCategorySelect();
+  document.getElementById('fCategory').value=e.category;
+  editingId = id;
+  document.getElementById('saveBtn').textContent='حفظ التعديل';
+  document.getElementById('formPanel').style.display='block';
+  document.getElementById('catPanel').style.display='none';
+  document.getElementById('toggleFormBtn').style.display='none';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function deleteEntry(id){
+  if(!confirm('حذف هذه الكلمة نهائيًا؟')) return;
+  entries = entries.filter(e=>e.id!==id);
+  saveEntries();
+  if(sheetLink) sheetPost('delete', {id});
+  render();
+}
+
+document.getElementById('toggleFormBtn').onclick = ()=>{
+  resetForm();
+  document.getElementById('formPanel').style.display='block';
+  document.getElementById('catPanel').style.display='none';
+  document.getElementById('linkPanel').style.display='none';
+  document.getElementById('toggleFormBtn').style.display='none';
+  document.getElementById('fWord').focus();
+};
+document.getElementById('cancelBtn').onclick = ()=>{
+  document.getElementById('formPanel').style.display='none';
+  document.getElementById('toggleFormBtn').style.display='block';
+  resetForm();
+};
+document.getElementById('toggleCatBtn').onclick = ()=>{
+  const panel = document.getElementById('catPanel');
+  panel.style.display = panel.style.display==='none' ? 'block' : 'none';
+  document.getElementById('linkPanel').style.display='none';
+  document.getElementById('formPanel').style.display='none';
+  document.getElementById('toggleFormBtn').style.display='block';
+  render();
+};
+document.getElementById('toggleLinkBtn').onclick = ()=>{
+  const panel = document.getElementById('linkPanel');
+  panel.style.display = panel.style.display==='none' ? 'block' : 'none';
+  document.getElementById('catPanel').style.display='none';
+  document.getElementById('formPanel').style.display='none';
+  document.getElementById('toggleFormBtn').style.display='block';
+  if(sheetLink){
+    document.getElementById('linkUrl').value = sheetLink.url;
+    document.getElementById('linkToken').value = sheetLink.token;
+  }
+};
+document.getElementById('addCatBtn').onclick = addCategory;
+document.getElementById('newCatInput').addEventListener('keydown', e=>{ if(e.key==='Enter') addCategory(); });
+
+document.getElementById('saveBtn').onclick = async ()=>{
+  const word = document.getElementById('fWord').value.trim();
+  const sentence = document.getElementById('fSentence').value.trim();
+  if(!word || !sentence){ alert('الكلمة والجملة الأصلية مطلوبتان.'); return; }
+  const data = {
+    word, sentence,
+    meaning: document.getElementById('fMeaning').value.trim(),
+    notes: document.getElementById('fNotes').value.trim(),
+    category: document.getElementById('fCategory').value,
+    date: new Date().toISOString().slice(0,10),
+  };
+  if(editingId){
+    const idx = entries.findIndex(e=>e.id===editingId);
+    entries[idx] = {...entries[idx], ...data};
+    saveEntries();
+    if(sheetLink) sheetPost('update', {id: editingId, ...data});
+  }else{
+    const newEntry = {id:Date.now(), ...data};
+    entries.push(newEntry);
+    saveEntries();
+    if(sheetLink){
+      const res = await sheetPost('add', data);
+      if(res && res.ok && res.id){ newEntry.id = res.id; saveEntries(); }
+    }
+  }
+  document.getElementById('formPanel').style.display='none';
+  document.getElementById('toggleFormBtn').style.display='block';
+  resetForm();
+  render();
+};
+document.getElementById('search').oninput = render;
+
+// ---- Google Sheet sync ----
+function loadSheetLink(){
+  try{ const raw = localStorage.getItem(LINK_KEY); sheetLink = raw ? JSON.parse(raw) : null; }
+  catch(e){ sheetLink = null; }
+}
+function saveSheetLink(){ try{ localStorage.setItem(LINK_KEY, sheetLink?JSON.stringify(sheetLink):''); }catch(e){} }
+function setSyncStatus(text){ const el=document.getElementById('syncStatus'); if(el) el.textContent = text; }
+
+async function sheetGet(action, params){
+  const q = new URLSearchParams({action, token: sheetLink.token, ...params});
+  const res = await fetch(sheetLink.url + '?' + q.toString());
+  return res.json();
+}
+async function sheetPost(action, payload){
+  if(!sheetLink) return null;
+  try{
+    const res = await fetch(sheetLink.url, {
+      method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({action, token: sheetLink.token, ...payload}),
+    });
+    return await res.json();
+  }catch(e){ return null; }
+}
+
+async function syncFromSheet(showAlert){
+  if(!sheetLink){ setSyncStatus('📴 غير مرتبط — يعمل محليًا فقط'); return; }
+  setSyncStatus('🔄 جارِ المزامنة...');
+  try{
+    const res = await sheetGet('list', {});
+    if(res && res.ok){
+      entries = res.rows.map(r=>({
+        id:r.id, word:r.word, sentence:r.sentence, meaning:r.meaning||'',
+        notes:r.notes||'', category: ensureCategory(r.category||''), date:r.date||'',
+      }));
+      saveEntries(); render();
+      setSyncStatus('✅ متصل بجوجل شيت ('+entries.length+' كلمة)');
+      if(showAlert) alert('تمت المزامنة بنجاح.');
+    }else{
+      setSyncStatus('⚠️ تعذّر الاتصال — يعمل محليًا الآن');
+      if(showAlert) alert('تعذّر الاتصال بالشيت. تأكد من الرابط وكلمة السر.');
+    }
+  }catch(err){
+    setSyncStatus('⚠️ لا يمكن الوصول للشيت من هنا — يعمل محليًا الآن');
+    if(showAlert) alert('تعذّر الاتصال. إذا كنت تفتح الصفحة داخل Claude، هذا متوقع — الربط يعمل فقط بعد رفع الملف على استضافة خارجية.');
+  }
+}
+
+document.getElementById('saveLinkBtn').onclick = ()=>{
+  const url = document.getElementById('linkUrl').value.trim();
+  const token = document.getElementById('linkToken').value.trim();
+  if(!url || !token){ alert('الرابط وكلمة السر مطلوبان.'); return; }
+  sheetLink = {url, token};
+  saveSheetLink();
+  syncFromSheet(true);
+};
+document.getElementById('unlinkBtn').onclick = ()=>{
+  sheetLink = null;
+  saveSheetLink();
+  setSyncStatus('📴 غير مرتبط — يعمل محليًا فقط');
+};
+
+// ---- Excel export/import ----
+async function exportExcel(){
+  if(!downloadsCap){ alert('التصدير غير متاح في هذا العرض حاليًا.'); return; }
+  const rows = entries.map(e=>({
+    'الكلمة': e.word, 'الجملة الأصلية': e.sentence, 'المعنى': e.meaning||'',
+    'ملاحظات': e.notes||'', 'التصنيف': catLabelOf(e.category), 'التاريخ': e.date,
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'المفردات');
+  const buf = XLSX.write(wb, {type:'array', bookType:'xlsx'});
+  const blob = new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  try{ await downloadsCap.save({filename:'دفتر-المفردات-التركية.xlsx', data: blob}); }
+  catch(err){ if(!err || err.code!=='declined') alert('تعذر حفظ الملف.'); }
+}
+document.getElementById('exportBtn').onclick = exportExcel;
+
+document.getElementById('importBtn').onclick = ()=> document.getElementById('importFile').click();
+document.getElementById('importFile').onchange = function(ev){
+  const file = ev.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, {type:'array'});
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, {defval:''});
+      if(rows.length===0){ alert('الملف فارغ.'); return; }
+      const replace = confirm('اضغط "موافق" لاستبدال كل الكلمات الحالية بمحتوى الملف بالكامل (بما فيه الحذف).\nاضغط "إلغاء" للدمج فقط بدون حذف شيء.');
+      const imported = rows.map(r=>{
+        const wordVal = String(r['الكلمة']||'').trim();
+        const sentenceVal = String(r['الجملة الأصلية']||'').trim();
+        if(!wordVal || !sentenceVal) return null;
+        return {
+          id: Date.now()+Math.floor(Math.random()*1000000),
+          word: wordVal, sentence: sentenceVal,
+          meaning: String(r['المعنى']||''), notes: String(r['ملاحظات']||''),
+          category: ensureCategory(String(r['التصنيف']||'')),
+          date: String(r['التاريخ']||new Date().toISOString().slice(0,10)),
+        };
+      }).filter(Boolean);
+      if(replace){ entries = imported; }
+      else{
+        imported.forEach(imp=>{
+          const idx = entries.findIndex(e=> e.word===imp.word && e.sentence===imp.sentence);
+          if(idx>-1) entries[idx] = {...entries[idx], ...imp, id: entries[idx].id};
+          else entries.push(imp);
+        });
+      }
+      saveEntries(); render();
+      alert('تم الاستيراد: '+imported.length+' كلمة.');
+    }catch(err){ alert('تعذر قراءة الملف. تأكد أنه ملف Excel صحيح.'); }
+    finally{ ev.target.value=''; }
+  };
+  reader.readAsArrayBuffer(file);
+};
+
+// ---- init ----
+loadEntries();
+loadCategories();
+loadSheetLink();
+render();
+if(sheetLink){ syncFromSheet(false); } else { setSyncStatus('📴 غير مرتبط — يعمل محليًا فقط'); }
+if(window.claude){
+  window.claude.use('downloads').then(cap=>{
+    downloadsCap = cap;
+    document.getElementById('exportBtn').style.display = downloadsCap ? 'inline-block' : 'none';
+  }).catch(()=>{ downloadsCap = null; });
+}
+</script>
+</body>
+</html>
